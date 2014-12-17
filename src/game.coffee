@@ -7,36 +7,24 @@ canvas        = document.createElement('canvas')
 ctx           = canvas.getContext("2d")
 canvas.width  = 512
 canvas.height = 480
-previous = Date.now()
-
 document.body.appendChild(canvas)
 
-# Load Images
-bgReady = false
-bgImage = new Image()
-bgImage.onload = ->
-  bgReady = true
-bgImage.src = "images/background.png"
-heroReady = false
-heroImage = new Image()
-heroImage.onload = ->
-  heroReady = true
-heroImage.src = "images/hero.png"
-monsterReady = false
-monsterImage = new Image()
-monsterImage.onload = ->
-  monsterReady = true
-monsterImage.src = "images/monster.png"
+previous = Date.now()
 
-# Game Objects
-hero =
-  speed: 256 # pixels per second
-  x: 0
-  y: 0
 
-monster =
-  x: 0
-  y: 0
+class Sprite
+  constructor: (x, y, width, height, speed, imageSource) ->
+    @x      = x
+    @y      = y
+    @width  = width
+    @height = height
+    @speed  = speed
+    @image  = new Image()
+    @image.src = imageSource
+
+background = new Sprite(0, 0, 512, 480, null, "images/background.png")
+hero       = new Sprite(0, 0, 32, 32, 256, "images/hero.png")
+monster    = new Sprite(0, 0, 32, 32, 256, "images/monster.png")
 
 monstersCaught = 0
 
@@ -78,14 +66,9 @@ update = (modifier) ->
 
 # Render
 render = ->
-  if bgReady
-    ctx.drawImage(bgImage, 0, 0)
-
-  if heroReady
-    ctx.drawImage(heroImage, hero.x, hero.y)
-
-  if monsterReady
-    ctx.drawImage(monsterImage, monster.x, monster.y)
+  ctx.drawImage(background.image, background.x, background.y)
+  ctx.drawImage(hero.image, hero.x, hero.y)
+  ctx.drawImage(monster.image, monster.x, monster.y)
 
   ctx.fillStyle = "rgb(250, 250, 250)"
   ctx.font = "24px Helvetica"
