@@ -15,3 +15,7 @@ gulp.task('compile-coffee', function() {
       .pipe(concat('game.js'))
       .pipe(gulp.dest('.'))
 });
+
+gulp.doneCallback = function (err) {
+  process.exit(err ? 1 : 0);
+};
