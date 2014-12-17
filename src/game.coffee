@@ -22,6 +22,12 @@ class Sprite
     @image  = new Image()
     @image.src = imageSource
 
+spritesAreColliding = (spriteOne, spriteTwo) ->
+  if spriteOne.x <= (spriteTwo.x + spriteTwo.width) && spriteTwo.x <= (spriteOne.x + spriteOne.width) && spriteOne.y <= (spriteTwo.y + spriteTwo.height) && spriteTwo.y <= (spriteOne.y + spriteOne.height)
+    true
+  else
+    false
+
 background = new Sprite(0, 0, 512, 480, null, "images/background.png")
 hero       = new Sprite(0, 0, 32, 32, 256, "images/hero.png")
 monster    = new Sprite(0, 0, 32, 32, 256, "images/monster.png")
@@ -60,7 +66,7 @@ update = (modifier) ->
   if ("39" in keys)
     hero.x += hero.speed * modifier
 
-  if hero.x <= (monster.x + 32) && monster.x <= (hero.x + 32) && hero.y <= (monster.y + 32) && monster.y <= (hero.y + 32)
+  if spritesAreColliding(hero, monster)
     monstersCaught += 1
     reset()
 
