@@ -11,7 +11,6 @@ document.body.appendChild(canvas)
 
 previous = Date.now()
 
-
 class Sprite
   constructor: (x, y, width, height, speed, imageSource) ->
     @x      = x
