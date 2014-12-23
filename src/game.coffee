@@ -8,6 +8,23 @@ ctx           = canvas.getContext("2d")
 canvas.width  = 480
 canvas.height = 480
 document.body.appendChild(canvas)
+map = [
+  [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+]
 
 previous = Date.now()
 
@@ -37,6 +54,7 @@ spritesAreColliding = (spriteOne, spriteTwo) ->
     false
 
 floor_tile = new Object(32, 32, "images/brick.png")
+wall_tile  = new Object(32, 32, "images/wall.png")
 hero       = new Sprite(0, 0, 32, 32, 256, "images/hero.png")
 monster    = new Sprite(0, 0, 32, 32, 256, "images/monster.png")
 
@@ -62,56 +80,58 @@ reset = ->
   monster.x = 32 + (Math.random() * (canvas.width - 64))
   monster.y = 32 + (Math.random() * (canvas.height - 64))
 
-# Updates game object
-update = (modifier) ->
+getValidPosition = (current, future) ->
+  console.log future
+  if map[Math.floor(future.x / 32)][Math.floor(future.y / 32)] != 0
+    current
+  else
+    future
+
+getPositionFromMovement = (modifier, current_position) ->
   keys = (k for k of keysDown)
+  position = {x: current_position.x, y: current_position.y}
   if ("38" in keys)
     if (hero.y - (hero.speed * modifier)) <= 0
-      hero.y = canvas.height - hero.y
+      position.y = canvas.height - hero.y
     else
-      hero.y -= hero.speed * modifier
+      position.y -= hero.speed * modifier
   if ("40" in keys)
     if (hero.y + (hero.speed * modifier)) >= canvas.height
-      hero.y = hero.y - canvas.height
+      position.y = hero.y - canvas.height
     else
-      hero.y += hero.speed * modifier
+      position.y += hero.speed * modifier
   if ("37" in keys)
     if (hero.x - (hero.speed * modifier)) <= 0
-      hero.x = canvas.width - hero.x
+      position.x = canvas.width - hero.x
     else
-      hero.x -= hero.speed * modifier
+      position.x -= hero.speed * modifier
   if ("39" in keys)
     if (hero.x + (hero.speed * modifier)) >= canvas.width
-      hero.x = hero.x - canvas.width
+      position.x = hero.x - canvas.width
     else
-      hero.x += hero.speed * modifier
+      position.x += hero.speed * modifier
+  position
+
+# Updates game object
+update = (modifier) ->
+  current_position = {x: hero.x, y: hero.y}
+  future_position  = getPositionFromMovement(modifier, current_position)
+  position = getValidPosition(current_position, future_position)
+  hero.x = position.x
+  hero.y = position.y
 
   if spritesAreColliding(hero, monster)
     monstersCaught += 1
     reset()
 
-renderMap = ->
-  map = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+renderMap = (map) ->
+  mapKey = [
+    floor_tile,
+    wall_tile
   ]
   for i,v in map
     for j,r in i
-      if j == 0
-        ctx.drawImage(floor_tile.image, v*floor_tile.width, r*floor_tile.height)
+      ctx.drawImage(mapKey[j].image, r*mapKey[j].width, v*mapKey[j].height)
 
 # Render
 render = ->
@@ -130,7 +150,7 @@ main = ->
   delta = now - previous
 
   update ( delta / 1000 )
-  renderMap()
+  renderMap(map)
   render()
 
   previous = now
