@@ -5,11 +5,20 @@
 # Create the canvas
 canvas        = document.createElement('canvas')
 ctx           = canvas.getContext("2d")
-canvas.width  = 512
+canvas.width  = 480
 canvas.height = 480
 document.body.appendChild(canvas)
 
 previous = Date.now()
+
+class Object
+  constructor: (width, height, imageSource, permeable) ->
+    @width = width
+    @height = height
+    @permeable = permeable
+    @image = new Image()
+    @image.src = imageSource
+
 
 class Sprite
   constructor: (x, y, width, height, speed, imageSource) ->
@@ -27,7 +36,7 @@ spritesAreColliding = (spriteOne, spriteTwo) ->
   else
     false
 
-background = new Sprite(0, 0, 512, 480, null, "images/background.png")
+floor_tile = new Object(32, 32, "images/brick.png")
 hero       = new Sprite(0, 0, 32, 32, 256, "images/hero.png")
 monster    = new Sprite(0, 0, 32, 32, 256, "images/monster.png")
 
@@ -81,9 +90,32 @@ update = (modifier) ->
     monstersCaught += 1
     reset()
 
+renderMap = ->
+  map = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ]
+  for i,v in map
+    for j,r in i
+      if j == 0
+        ctx.drawImage(floor_tile.image, v*floor_tile.width, r*floor_tile.height)
+
 # Render
 render = ->
-  ctx.drawImage(background.image, background.x, background.y)
+  # ctx.drawImage(background.image, background.x, background.y)
   ctx.drawImage(hero.image, hero.x, hero.y)
   ctx.drawImage(monster.image, monster.x, monster.y)
 
@@ -98,6 +130,7 @@ main = ->
   delta = now - previous
 
   update ( delta / 1000 )
+  renderMap()
   render()
 
   previous = now
