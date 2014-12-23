@@ -58,13 +58,25 @@ reset = ->
 update = (modifier) ->
   keys = (k for k of keysDown)
   if ("38" in keys)
-    hero.y -= hero.speed * modifier
+    if (hero.y - (hero.speed * modifier)) <= 0
+      hero.y = canvas.height - hero.y
+    else
+      hero.y -= hero.speed * modifier
   if ("40" in keys)
-    hero.y += hero.speed * modifier
+    if (hero.y + (hero.speed * modifier)) >= canvas.height
+      hero.y = hero.y - canvas.height
+    else
+      hero.y += hero.speed * modifier
   if ("37" in keys)
-    hero.x -= hero.speed * modifier
+    if (hero.x - (hero.speed * modifier)) <= 0
+      hero.x = canvas.width - hero.x
+    else
+      hero.x -= hero.speed * modifier
   if ("39" in keys)
-    hero.x += hero.speed * modifier
+    if (hero.x + (hero.speed * modifier)) >= canvas.width
+      hero.x = hero.x - canvas.width
+    else
+      hero.x += hero.speed * modifier
 
   if spritesAreColliding(hero, monster)
     monstersCaught += 1

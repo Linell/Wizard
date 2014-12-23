@@ -74,16 +74,32 @@
       return _results;
     })();
     if ((__indexOf.call(keys, "38") >= 0)) {
-      hero.y -= hero.speed * modifier;
+      if ((hero.y - (hero.speed * modifier)) <= 0) {
+        hero.y = canvas.height - hero.y;
+      } else {
+        hero.y -= hero.speed * modifier;
+      }
     }
     if ((__indexOf.call(keys, "40") >= 0)) {
-      hero.y += hero.speed * modifier;
+      if ((hero.y + (hero.speed * modifier)) >= canvas.height) {
+        hero.y = hero.y - canvas.height;
+      } else {
+        hero.y += hero.speed * modifier;
+      }
     }
     if ((__indexOf.call(keys, "37") >= 0)) {
-      hero.x -= hero.speed * modifier;
+      if ((hero.x - (hero.speed * modifier)) <= 0) {
+        hero.x = canvas.width - hero.x;
+      } else {
+        hero.x -= hero.speed * modifier;
+      }
     }
     if ((__indexOf.call(keys, "39") >= 0)) {
-      hero.x += hero.speed * modifier;
+      if ((hero.x + (hero.speed * modifier)) >= canvas.width) {
+        hero.x = hero.x - canvas.width;
+      } else {
+        hero.x += hero.speed * modifier;
+      }
     }
     if (spritesAreColliding(hero, monster)) {
       monstersCaught += 1;

@@ -10,5 +10,8 @@
     "gulp-compile-js": "0.0.3",
     "gulp-concat": "^2.4.2",
     "gulp-util": "^3.0.1"
+  },
+  "scripts": {
+    "compile": "coffee -c src/game.coffee && mv src/game.js game.js"
   }
 }
