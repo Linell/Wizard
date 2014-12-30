@@ -59,15 +59,11 @@ map = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ]
 
-getTileAtCoordinates = (x,y) ->
-
-
 spritesAreColliding = (spriteOne, spriteTwo) ->
   if spriteOne.x <= (spriteTwo.x + spriteTwo.width) && spriteTwo.x <= (spriteOne.x + spriteOne.width) && spriteOne.y <= (spriteTwo.y + spriteTwo.height) && spriteTwo.y <= (spriteOne.y + spriteOne.height)
     true
   else
     false
-
 
 addEventListener "keydown", ((e) ->
   keysDown[e.keyCode] = true
@@ -118,12 +114,14 @@ getPositionFromMovement = (modifier, current_position) ->
 update = (modifier) ->
   current_position = {x: hero.x, y: hero.y}
   future_position  = getPositionFromMovement(modifier, current_position)
-  if mapTileAtCoordinatesIsPermeable(32, future_position.x, future_position.y)
-    hero.x = future_position.x
-    hero.y = future_position.y
-  else
-    hero.x = current_position.x
-    hero.y = current_position.y
+  hero.x = future_position.x
+  hero.y = future_position.y
+  # if mapTileAtCoordinatesIsPermeable(32, future_position.x, future_position.y)
+  #   hero.x = future_position.x
+  #   hero.y = future_position.y
+  # else
+  #   hero.x = current_position.x
+  #   hero.y = current_position.y
 
   if spritesAreColliding(hero, monster)
     monstersCaught += 1

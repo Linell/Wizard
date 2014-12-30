@@ -24,3 +24,7 @@ serve
 ```
 
 and you're up and running on localhost:4000. Navigate there and *boom* you're playing Wizard.
+
+---
+
+*Original inspiration and whatnot comes from [here](http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/).*
