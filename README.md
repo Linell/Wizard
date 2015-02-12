@@ -1,6 +1,7 @@
 ## Wizard
 
-Wizard is a dorky little game written in CoffeeScript using HTML5 canvas.
+Wizard is a dorky little game written in CoffeeScript using HTML5 canvas. I'm currently
+trying to get the things to stop when they hit a wall.
 
 ### Installation and Compilation
 
